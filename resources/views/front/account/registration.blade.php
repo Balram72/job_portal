@@ -54,14 +54,14 @@
             var errors = response.errors;
               if(errors.name){
                 $('#name').addClass('is-invalid')
-                          .siblings('span')
-                          .addClass('invalid-feedback')
-                          .html(errors.name);
+                .siblings('span')
+                .addClass('invalid-feedback')
+                .html(errors.name);
               }else{
                 $('#name').removeClass('is-invalid')
-                        .siblings('span')
-                        .removeClass('invalid-feedback')
-                        .html('');
+                .siblings('span')
+                .removeClass('invalid-feedback')
+                .html('');
               }
              if(errors.email){
                 $('#email').addClass('is-invalid')

@@ -36,7 +36,6 @@ class AccountController extends Controller
 
             session()->flash('success', 'You have Registerd successfully.');
 
-            // $this->success('You have Registerd successfully.');
 
             return response()->json([
                 'status' => true,
@@ -79,8 +78,44 @@ class AccountController extends Controller
 
     public function profile()
     {
-        return view('front.account.profile');
+        $id = Auth::user()->id;
+        $user = User::where('id', $id)->first();
+
+        return view('front.account.profile', compact('user'));
     }
+
+    public function updateProfile(Request $req)
+    {
+        $validator = Validator::make($req->all(), [
+            'name' => 'required|min:5|max:20',
+            'email' => 'required|email|unique:users,email,' . Auth::user()->id,
+            'designation' => 'required|min:5|max:30',
+            'mobile' => 'required|numeric|digits:10',
+        ]);
+        if ($validator->passes()) {
+
+            $user = User::find(Auth::user()->id);
+            $user->name = $req->name;
+            $user->email = $req->email;
+            $user->designation = $req->designation;
+            $user->mobile = $req->mobile;
+
+            $user->save();
+
+            session()->flash('success', 'Profile Updated successfully.');
+
+            return response()->json([
+                'status' => true,
+                'errors' => []
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()
+            ]);
+        }
+    }
+
     public function logout()
     {
         Auth::logout();

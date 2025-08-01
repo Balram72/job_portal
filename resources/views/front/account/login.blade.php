@@ -3,25 +3,7 @@
 <section class="section-5">
     <div class="container my-5">
         <div class="py-lg-2">&nbsp;</div>
-        @if(session('success'))
-            <div id="success-alert" class="row d-flex justify-content-center">
-                <div class="col-md-5">
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        {{ session('success') }}
-                    </div>
-                </div>
-            </div>
-        @endif
-         @if(session('error'))
-            <div id="danger-alert" class="row d-flex justify-content-center">
-                <div class="col-md-5">
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        {{ session('error') }}
-                    </div>
-                </div>
-            </div>
-        @endif
-
+        @include('front.message')
         <div class="row d-flex justify-content-center">
             <div class="col-md-5">
                 <div class="card shadow border-0 p-5">
