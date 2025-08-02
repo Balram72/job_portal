@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class AccountController extends Controller
 {
@@ -120,5 +123,48 @@ class AccountController extends Controller
     {
         Auth::logout();
         return redirect()->route('account.login');
+    }
+
+    public function updateProfilePic(Request $req)
+    {
+        // dd($req->all());
+        $id = Auth::user()->id;
+        $validator = Validator::make($req->all(), [
+            'image' => 'required|image',
+        ]);
+        if ($validator->passes()) {
+            $image = $req->file('image');
+            $ext = $image->getClientOriginalExtension();
+            $image_name = $id . '-' . time() . '.' . $ext;
+            $image->move(public_path('/profile_pic/'), $image_name);
+
+
+            // create a small thambnail
+            $sourcePath = public_path('/profile_pic/' . $image_name);
+            $manager = new ImageManager(Driver::class);
+            $image = $manager->read($sourcePath);
+            $image->cover(150, 150);
+            $image->toPng()->save(public_path('/profile_pic/thumb/' . $image_name));
+
+            // Delete old image
+            File::delete(public_path('/profile_pic/thumb/' . Auth::user()->image));
+            File::delete(public_path('/profile_pic/' . Auth::user()->image));
+
+            User::where('id', $id)->update([
+                'image' => $image_name
+            ]);
+
+            session()->flash('success', 'Profile Picture Updated successfully.');
+
+            return response()->json([
+                'status' => true,
+                'errors' => [],
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()
+            ]);
+        }
     }
 }
