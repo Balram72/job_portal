@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Models\JobType;
 use App\Models\User;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
@@ -166,5 +168,13 @@ class AccountController extends Controller
                 'errors' => $validator->errors()
             ]);
         }
+    }
+
+    public function createJob()
+    {
+        $categorys = Category::orderBy('name', 'asc')->where('status', 1)->get();
+        $jobtypes = JobType::orderBy('name', 'asc')->where('status', 1)->get();
+
+        return view('front.account.job.create', compact('categorys', 'jobtypes'));
     }
 }
