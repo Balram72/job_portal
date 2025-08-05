@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
-use App\Models\JobType;
+use App\Models\Job;
 use App\Models\User;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Validator;
+use App\Models\JobType;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Intervention\Image\ImageManager;
+use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Drivers\Gd\Driver;
 
 class AccountController extends Controller
@@ -174,7 +175,57 @@ class AccountController extends Controller
     {
         $categorys = Category::orderBy('name', 'asc')->where('status', 1)->get();
         $jobtypes = JobType::orderBy('name', 'asc')->where('status', 1)->get();
-
         return view('front.account.job.create', compact('categorys', 'jobtypes'));
+    }
+
+    public function saveJob(Request $req)
+    {
+        $rules = [
+            'title' => 'required|min:5|max:200',
+            'category' => 'required',
+            'jobType' => 'required',
+            'vacancy' => 'required|integer',
+            'location' => 'required|max:50',
+            'description' => 'required',
+            'experience' => 'required',
+            'company_name' => 'required|min:3|max:75',
+        ];
+        $validator = Validator::make($req->all(), $rules);
+        if ($validator->passes()) {
+            $job = new Job();
+            $job->title = $req->title;
+            $job->category_id = $req->category;
+            $job->job_type_id  = $req->jobType;
+            $job->vacancy = $req->vacancy;
+            $job->salary = $req->salary;
+            $job->location = $req->location;
+            $job->description = $req->description;
+            $job->benefits = $req->benefits;
+            $job->responsibility  = $req->responsibility;
+            $job->qualification = $req->qualifications;
+            $job->keywords = $req->keywords;
+            $job->experience = $req->experience;
+            $job->company_name = $req->company_name;
+            $job->company_location = $req->location;
+            $job->company_website = $req->website;
+            $job->save();
+
+            session()->flash('success', 'Job Added successfully.');
+
+            return response()->json([
+                'status' => true,
+                'errors' => []
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()
+            ]);
+        }
+    }
+
+    public function myJobs(Request $req)
+    {
+        return view('front.account.job.my-jobs');
     }
 }
