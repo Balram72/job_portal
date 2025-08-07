@@ -229,4 +229,64 @@ class AccountController extends Controller
         $jobs = Job::where('user_id', Auth::user()->id)->with('jobType')->paginate(10);
         return view('front.account.job.my-jobs', compact('jobs'));
     }
+
+    public function editJob(Request $req, $id)
+    {
+        $categorys = Category::orderBy('name', 'asc')->where('status', 1)->get();
+        $jobtypes = JobType::orderBy('name', 'asc')->where('status', 1)->get();
+
+        $job = Job::where(['id' => $id, 'user_id' => Auth::user()->id])->first();
+        if ($job === null) {
+            abort(404);
+        }
+
+        return view('front.account.job.edit', compact('categorys', 'jobtypes', 'job'));
+    }
+    public function updateJob(Request $req, $id)
+    {
+        $rules = [
+            'title' => 'required|min:5|max:200',
+            'category' => 'required',
+            'jobType' => 'required',
+            'vacancy' => 'required|integer',
+            'location' => 'required|max:50',
+            'description' => 'required',
+            'experience' => 'required',
+            'company_name' => 'required|min:3|max:75',
+        ];
+        $validator = Validator::make($req->all(), $rules);
+        if ($validator->passes()) {
+
+            $job = Job::find($id);
+            $job->title = $req->title;
+            $job->category_id = $req->category;
+            $job->job_type_id  = $req->jobType;
+            $job->user_id = Auth::user()->id;
+            $job->vacancy = $req->vacancy;
+            $job->salary = $req->salary;
+            $job->location = $req->location;
+            $job->description = $req->description;
+            $job->benefits = $req->benefits;
+            $job->responsibility  = $req->responsibility;
+            $job->qualification = $req->qualifications;
+            $job->keywords = $req->keywords;
+            $job->experience = $req->experience;
+            $job->company_name = $req->company_name;
+            $job->company_location = $req->location;
+            $job->company_website = $req->website;
+            $job->save();
+
+            session()->flash('success', 'Job Updated successfully.');
+
+            return response()->json([
+                'status' => true,
+                'errors' => []
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()
+            ]);
+        }
+    }
 }

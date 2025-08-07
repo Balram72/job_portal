@@ -58,12 +58,12 @@
                                                 </td>
                                                 <td>
                                                     <div class="action-dots float-end">
-                                                        <a href="#" class="" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <button class="bg-transparent border-0"   data-bs-toggle="dropdown" aria-expanded="false" style="color:#2b2b2b59">
                                                             <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                                                        </a>
+                                                        </button>
                                                         <ul class="dropdown-menu dropdown-menu-end">
                                                             <li><a class="dropdown-item text-info" href="job-detail.html"> <i class="fa fa-eye text-info" aria-hidden="true"></i> View</a></li>
-                                                            <li><a class="dropdown-item text-success" href="#"><i class="fa fa-edit text-success" aria-hidden="true"></i> Edit</a></li>
+                                                            <li><a class="dropdown-item text-success" href="{{ route('account.editJob', $job->id) }}"><i class="fa fa-edit text-success" aria-hidden="true"></i> Edit</a></li>
                                                             <li><a class="dropdown-item text-danger" href="#"><i class="fa fa-trash text-danger" aria-hidden="true"></i> Remove</a></li>
                                                         </ul>
                                                     </div>
