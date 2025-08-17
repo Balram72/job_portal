@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Job;
+use App\Models\JobApplication;
 use App\Models\JobType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class JobsController extends Controller
 {
@@ -72,5 +74,48 @@ class JobsController extends Controller
         }
 
         return view('front.jobDetail', compact('job'));
+    }
+
+
+    public function applyJob(Request $req)
+    {
+        $id = $req->id;
+        $job = Job::where('id', $id)->first();
+
+        // If job not found in db
+        if ($job == null) {
+            $message = 'Job does not exist';
+            session()->flash('error', $message);
+            return response()->json(['status' => false, 'message' => $message]);
+        }
+        // You can not apply on your own job
+        $employer_id = $job->user_id;
+        if ($employer_id == Auth::user()->id) {
+            $message = 'You can not apply on your own job';
+            session()->flash('error', $message);
+            return response()->json(['status' => false, 'message' => $message]);
+        }
+        // You can Not apply on a job twice
+        $jobApplicationCount = JobApplication::where([
+            'user_id' => Auth::user()->id,
+            'job_id' => $id,
+        ])->count();
+        if ($jobApplicationCount > 0) {
+            $message = 'You have already applied for this job';
+            session()->flash('error', $message);
+            return response()->json(['status' => false, 'message' => $message]);
+        }
+
+        // Save the job application
+        $application = new JobApplication();
+        $application->job_id = $id;
+        $application->user_id = Auth::user()->id;
+        $application->employer_id = $employer_id;
+        $application->applied_date = now();
+        $application->save();
+
+        $message = 'You have successfully applied for this job';
+        session()->flash('success', $message);
+        return response()->json(['status' => true, 'message' => $message]);
     }
 }
