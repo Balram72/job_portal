@@ -142,8 +142,8 @@
                                 </div>
 
                                 <div class="mb-4 col-md-6">
-                                    <label for="" class="mb-2">Location</label>
-                                    <input type="text" value="{{$job->location}}" placeholder="Location" id="location" name="location"
+                                    <label for="" class="mb-2">Company Location</label>
+                                    <input type="text" value="{{$job->company_location}}" placeholder="Company Location" id="company_location" name="company_location"
                                         class="form-control">
                                     <span></span>
                                 </div>

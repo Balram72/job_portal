@@ -143,7 +143,7 @@
 
                                 <div class="mb-4 col-md-6">
                                     <label for="" class="mb-2">Location</label>
-                                    <input type="text" placeholder="Location" id="location" name="location"
+                                    <input type="text" placeholder="Location" id="company_location" name="company_location"
                                         class="form-control">
                                     <span></span>
                                 </div>

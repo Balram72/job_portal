@@ -6,6 +6,7 @@ use App\Models\Job;
 use App\Models\User;
 use App\Models\JobType;
 use App\Models\Category;
+use App\Models\JobApplication;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
@@ -207,7 +208,7 @@ class AccountController extends Controller
             $job->keywords = $req->keywords;
             $job->experience = $req->experience;
             $job->company_name = $req->company_name;
-            $job->company_location = $req->location;
+            $job->company_location = $req->company_location;
             $job->company_website = $req->website;
             $job->save();
 
@@ -310,6 +311,35 @@ class AccountController extends Controller
         return response()->json([
             'status' => true,
             'errors' => []
+        ]);
+    }
+    public function myJobApplications()
+    {
+        $jobApplications = JobApplication::where('user_id', Auth::user()->id)
+            ->with(['job', 'job.jobType', 'job.applications'])
+            ->paginate(10);
+        return view('front.account.job.my-job-applications', compact('jobApplications'));
+    }
+
+
+    public function removeJobs(Request $req)
+    {
+        $jobApplication = JobApplication::where([
+            'id' => $req->id,
+            'user_id' => Auth::user()->id
+        ])->first();
+        if ($jobApplication === null) {
+            session()->flash('error', 'Job Application Not found.');
+            return response()->json([
+                'status' => false
+            ]);
+        }
+
+        JobApplication::find($req->id)->delete();
+
+        session()->flash('success', 'Job Application Deleted successfully.');
+        return response()->json([
+            'status' => true
         ]);
     }
 }
