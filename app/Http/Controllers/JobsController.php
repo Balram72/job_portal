@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Job;
 use App\Models\JobApplication;
 use App\Models\JobType;
+use App\Models\SavedJob;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -76,7 +77,14 @@ class JobsController extends Controller
             abort(404);
         }
 
-        return view('front.jobDetail', compact('job'));
+        $saveCount = SavedJob::where([
+            'user_id' => Auth::user()->id,
+            'job_id' => $id,
+        ])->count();
+
+
+
+        return view('front.jobDetail', compact('job', 'saveCount'));
     }
 
 
@@ -89,14 +97,14 @@ class JobsController extends Controller
         if ($job == null) {
             $message = 'Job does not exist';
             session()->flash('error', $message);
-            return response()->json(['status' => false, 'message' => $message]);
+            return response()->json(['status' => false]);
         }
         // You can not apply on your own job
         $employer_id = $job->user_id;
         if ($employer_id == Auth::user()->id) {
             $message = 'You can not apply on your own job';
             session()->flash('error', $message);
-            return response()->json(['status' => false, 'message' => $message]);
+            return response()->json(['status' => false]);
         }
         // You can Not apply on a job twice
         $jobApplicationCount = JobApplication::where([
@@ -106,7 +114,7 @@ class JobsController extends Controller
         if ($jobApplicationCount > 0) {
             $message = 'You have already applied for this job';
             session()->flash('error', $message);
-            return response()->json(['status' => false, 'message' => $message]);
+            return response()->json(['status' => false]);
         }
 
         // Save the job application
@@ -125,11 +133,50 @@ class JobsController extends Controller
             'job' => $job
         ];
         Mail::to($employer->email)->send(new JobNotificationEmail($mailData));
-
-
-
         $message = 'You have successfully applied for this job';
         session()->flash('success', $message);
-        return response()->json(['status' => true, 'message' => $message]);
+        return response()->json(['status' => true]);
+    }
+
+    public function saveJob(Request $req)
+    {
+        $id = $req->id;
+
+        $job = Job::find($id);
+
+        // If job not found in db
+        if ($job == null) {
+            $message = 'Job does not exist';
+            session()->flash('error', $message);
+            return response()->json(['status' => false]);
+        }
+
+        // check if the job is already saved
+        $saveCount = SavedJob::where([
+            'user_id' => Auth::user()->id,
+            'job_id' => $id,
+        ])->count();
+        if ($saveCount > 0) {
+            $message = 'You Have Already Saved On This Job';
+            session()->flash('error', $message);
+            return response()->json(['status' => false]);
+        }
+
+        // You can not Save on your own job
+        $employer_id = $job->user_id;
+        if ($employer_id == Auth::user()->id) {
+            $message = 'You can not Save on your own job';
+            session()->flash('error', $message);
+            return response()->json(['status' => false]);
+        }
+
+        $SavedJob = new SavedJob();
+        $SavedJob->user_id = Auth::user()->id;
+        $SavedJob->job_id = $id;
+        $SavedJob->save();
+
+        $message = 'You Have Successfully Saved On This Job';
+        session()->flash('success', $message);
+        return response()->json(['status' => true]);
     }
 }

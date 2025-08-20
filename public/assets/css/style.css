@@ -10056,7 +10056,7 @@ header .navbar-brand {
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
-    color: #0ed300;
+    color: #4f8aff;
     font-size: 14px;
     line-height: 40px;
     text-align: center;
@@ -10071,7 +10071,7 @@ header .navbar-brand {
     .jobs_right
     .apply_now
     a.heart_mark:hover {
-    background: #00d363;
+    background: #4f8aff;
     color: #fff;
 }
 .section-4 .job_details_area .job_sumary .summery_header {
@@ -10216,7 +10216,7 @@ header .navbar-brand {
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
-    color: #00d363;
+    color: #4f8aff;
     font-size: 14px;
     line-height: 40px;
     text-align: center;
@@ -10229,7 +10229,7 @@ header .navbar-brand {
     .jobs_right
     .apply_now
     a.heart_mark:hover {
-    background: #00d363;
+    background: #4f8aff;
     color: #fff;
 }
 label .req {
@@ -10809,3 +10809,7 @@ footer .nav-link {
     content: "";
 }
 /* '' */
+.save-job{
+    background-color:#4f8aff !important;
+    color:#fff !important;
+}

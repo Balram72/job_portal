@@ -37,7 +37,7 @@
                             </div>
                             <div class="jobs_right">
                                 <div class="apply_now">
-                                    <a class="heart_mark" href="#"> <i class="fa fa-heart-o" aria-hidden="true"></i></a>
+                                    <a class="heart_mark {{ ($saveCount == 1 ? 'save-job' : '') }}" href="javescript:void(0)" onclick="saveJob({{ $job->id }})"> <i class="fa fa-heart-o" aria-hidden="true"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -67,9 +67,15 @@
                         @endif
                         <div class="border-bottom"></div>
                         <div class="pt-3 text-end">
-                            <a href="#" class="btn btn-secondary">Save</a>
+
                             @if (Auth::check())
-                                <a href="#" onclick="applyJob({{ $job->id }})" class="btn btn-primary">Apply</a>
+                                <a href="javascript:void(0)" onclick="saveJob({{ $job->id }})" class="btn btn-secondary">Save</a>
+                            @else
+                                <a href="javascript:void(0)" class="btn btn-secondary disabled">Login to Save</a>
+                            @endif
+
+                            @if (Auth::check())
+                                <a href="javascript:void(0)" onclick="applyJob({{ $job->id }})" class="btn btn-primary">Apply</a>
                             @else
                                 <a href="javascript:void(0)" class="btn btn-primary disabled">Login to Apply</a>
                             @endif
@@ -133,6 +139,19 @@
                 }
             });
         }
+    }
+
+
+     function saveJob(id){
+        $.ajax({
+            url:"{{ route('saveJob') }}",
+            type:"POST",
+            data:{id:id},
+            dataType:"json",
+            success:function(response){
+                window.location.reload();
+            }
+        });
     }
 </script>
 @endsection
