@@ -77,14 +77,18 @@ class JobsController extends Controller
             abort(404);
         }
 
-        $saveCount = SavedJob::where([
-            'user_id' => Auth::user()->id,
-            'job_id' => $id,
-        ])->count();
+        $saveCount = 0;
+        if (Auth::user()) {
+            $saveCount = SavedJob::where([
+                'user_id' => Auth::user()->id,
+                'job_id' => $id,
+            ])->count();
+        }
 
+        // featch Applications
 
-
-        return view('front.jobDetail', compact('job', 'saveCount'));
+        $applications = JobApplication::where('job_id', $id)->with('user')->get();
+        return view('front.jobDetail', compact('job', 'saveCount', 'applications'));
     }
 
 
