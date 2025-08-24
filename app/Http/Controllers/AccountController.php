@@ -85,9 +85,9 @@ class AccountController extends Controller
 
     public function profile()
     {
+
         $id = Auth::user()->id;
         $user = User::where('id', $id)->first();
-
         return view('front.account.profile', compact('user'));
     }
 
@@ -313,6 +313,7 @@ class AccountController extends Controller
             'errors' => []
         ]);
     }
+
     public function myJobApplications()
     {
         $jobApplications = JobApplication::where('user_id', Auth::user()->id)
@@ -320,7 +321,6 @@ class AccountController extends Controller
             ->paginate(10);
         return view('front.account.job.my-job-applications', compact('jobApplications'));
     }
-
 
     public function removeJobs(Request $req)
     {
@@ -340,6 +340,37 @@ class AccountController extends Controller
         session()->flash('success', 'Job Application Deleted successfully.');
         return response()->json([
             'status' => true
+        ]);
+    }
+
+    public function updatePassword(Request $req)
+    {
+        $validator = Validator::make($req->all(), [
+            'old_password' => 'required',
+            'new_password' => 'required|min:5',
+            'confirm_password' => 'required|same:new_password'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors(),
+            ]);
+        }
+
+        if (Hash::check($req->old_password, Auth::user()->password) == false) {
+            session()->flash('error', 'Your old Password is incorrect.');
+            return response()->json([
+                'status' => true,
+            ]);
+        }
+
+        $user =  User::find(Auth::user()->id);
+        $user->password = Hash::make($req->new_password);
+        $user->save();
+        session()->flash('success', 'Password Update successfully');
+        return response()->json([
+            'status' => true,
         ]);
     }
 }
