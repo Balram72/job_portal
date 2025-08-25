@@ -10809,7 +10809,10 @@ footer .nav-link {
     content: "";
 }
 /* '' */
-.save-job{
-    background-color:#4f8aff !important;
-    color:#fff !important;
+.save-job {
+    background-color: #4f8aff !important;
+    color: #fff !important;
+}
+.trumbowyg-editor ul li {
+    list-style: disc;
 }

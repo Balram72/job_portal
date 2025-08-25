@@ -76,7 +76,7 @@
                                     <div class="card border-0 p-3 shadow mb-4">
                                         <div class="card-body">
                                             <h3 class="border-0 fs-5 pb-2 mb-0">{{ $featuredJob->title }}</h3>
-                                            <p>{{ \Illuminate\Support\Str::words($featuredJob->description, $words=5,'...') }}</p>
+                                            <p>{{ \Illuminate\Support\Str::words(strip_tags($featuredJob->description), $words=5,'...') }}</p>
                                             <div class="bg-light p-3 border">
                                                 <p class="mb-0">
                                                     <span class="fw-bolder"><i class="fa fa-map-marker"></i></span>
@@ -122,7 +122,7 @@
                                     <div class="card border-0 p-3 shadow mb-4">
                                         <div class="card-body">
                                             <h3 class="border-0 fs-5 pb-2 mb-0">{{ $latesJob->title }}</h3>
-                                            <p>{{ \Illuminate\Support\Str::words($latesJob->description, $words=5,'...') }}</p>
+                                            <p>{{ \Illuminate\Support\Str::words(strip_tags($latesJob->description), $words=5,'...') }}</p>
                                             <div class="bg-light p-3 border">
                                                 <p class="mb-0">
                                                     <span class="fw-bolder"><i class="fa fa-map-marker"></i></span>
