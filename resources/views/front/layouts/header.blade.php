@@ -18,6 +18,9 @@
 				@if(!Auth::check())
 					<a class="btn btn-outline-primary me-2" href="{{ route('account.login') }}" >Login</a>
 				@else
+					@if (Auth::user()->role == 'admin')
+							<a class="btn btn-outline-primary me-2" href="{{ route('admin.dashboard') }}" >Admin</a>
+					@endif
 					<a class="btn btn-outline-primary me-2" href="{{ route('account.profile') }}" >Account</a>
 				@endif
 				<a class="btn btn-primary" href="post-job.html" type="submit">Post a Job</a>
