@@ -15,6 +15,10 @@ class CheckAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
+        if ($request->user() == null) {
+            return redirect()->route('home');
+        }
+
         if ($request->user()->role != 'admin') {
             session()->flash('error', 'You Are not Authorized to access this page');
             return redirect()->route('account.profile');
