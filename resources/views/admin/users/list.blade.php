@@ -57,7 +57,7 @@
                                                         </button>
                                                         <ul class="dropdown-menu dropdown-menu-end">
                                                          
-                                                            <li><a class="dropdown-item text-success" href="{{ route('account.editJob', $user->id) }}"><i class="fa fa-edit text-success" aria-hidden="true"></i> Edit</a></li>
+                                                            <li><a class="dropdown-item text-success" href="{{ route('admin.users.edit', $user->id) }}"><i class="fa fa-edit text-success" aria-hidden="true"></i> Edit</a></li>
                                                             <li>
                                                                 <a class="dropdown-item text-danger" href="javascript:void(0)"
                                                                  onclick="deleteJob({{ $user->id }})">
