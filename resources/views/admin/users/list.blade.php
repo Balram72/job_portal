@@ -60,7 +60,7 @@
                                                             <li><a class="dropdown-item text-success" href="{{ route('admin.users.edit', $user->id) }}"><i class="fa fa-edit text-success" aria-hidden="true"></i> Edit</a></li>
                                                             <li>
                                                                 <a class="dropdown-item text-danger" href="javascript:void(0)"
-                                                                 onclick="deleteJob({{ $user->id }})">
+                                                                 onclick="deleteUser({{ $user->id }})">
                                                                 <i class="fa fa-trash text-danger" aria-hidden="true"></i> 
                                                                 Delete</a>
                                                             </li>
@@ -86,5 +86,20 @@
 @endsection
 
 @section('customJs')
+<script type="text/javascript">
 
+    function deleteUser(id) {
+       if(confirm("Are you sure you want to delete this user?")){
+        $.ajax({
+            url:"{{ route('admin.users.destroy') }}",
+            type:"delete",
+            data:{id:id},
+            datatype:"json",
+            success:function(response){
+                window.location.href='{{ route("admin.users") }}';
+            }
+        });
+       }
+    }
+</script>
 @endsection
