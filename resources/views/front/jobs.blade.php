@@ -123,7 +123,7 @@
                         </div>
                         @endif  
                       </div>
-                      {{ $Jobs->links() }}
+                      {{ $Jobs->withQueryString()->links() }}
                     </div>
                 </div>
             </div>
