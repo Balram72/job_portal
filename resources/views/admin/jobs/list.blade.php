@@ -6,7 +6,7 @@
             <div class="col">
                 <nav aria-label="breadcrumb" class=" rounded-3 p-3 mb-4">
                     <ol class="breadcrumb mb-0">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
                         <li class="breadcrumb-item active">Jobs</li>
                     </ol>
                 </nav>
@@ -60,7 +60,7 @@
                                                         </button>
                                                         <ul class="dropdown-menu dropdown-menu-end">
                                                          
-                                                            {{-- <li><a class="dropdown-item text-success" href="{{ route('admin.jobs.edit', $job->id) }}"><i class="fa fa-edit text-success" aria-hidden="true"></i> Edit</a></li> --}}
+                                                            <li><a class="dropdown-item text-success" href="{{ route('admin.jobs.edit', $job->id) }}"><i class="fa fa-edit text-success" aria-hidden="true"></i> Edit</a></li>
                                                             <li>
                                                                 <a class="dropdown-item text-danger" href="javascript:void(0)"
                                                                  onclick="deleteUser({{ $job->id }})">

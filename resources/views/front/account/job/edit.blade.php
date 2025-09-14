@@ -42,7 +42,6 @@
                                     <span></span>
                                 </div>
                             </div>
-
                             <div class="row">
                                 <div class="col-md-6 mb-4">
                                     <label for="" class="mb-2">Job Type<span class="req">*</span></label>
@@ -63,7 +62,6 @@
                                 </div>
                                 <span></span>
                             </div>
-
                             <div class="row">
                                 <div class="mb-4 col-md-6">
                                     <label for="" class="mb-2">Salary</label>
@@ -79,7 +77,6 @@
                                     <span></span>
                                 </div>
                             </div>
-
                             <div class="mb-4">
                                 <label for="" class="mb-2">Description<span class="req">*</span></label>
                                 <textarea class="textarea"  name="description" id="description" cols="5" rows="5"
@@ -122,17 +119,13 @@
                                 </select>
                                 <span></span>
                             </div>
-
-
                             <div class="mb-4">
                                 <label for="" class="mb-2">Keywords</label>
                                 <input type="text"  value="{{$job->keywords}}" placeholder="keywords" id="keywords" name="keywords"
                                     class="form-control">
                                 <span></span>
                             </div>
-
                             <h3 class="fs-4 mb-1 mt-5 border-top pt-5">Company Details</h3>
-
                             <div class="row">
                                 <div class="mb-4 col-md-6">
                                     <label for="" class="mb-2">Name<span class="req">*</span></label>
@@ -148,7 +141,6 @@
                                     <span></span>
                                 </div>
                             </div>
-
                             <div class="mb-4">
                                 <label for="" class="mb-2">Website</label>
                                 <input type="text" value="{{$job->company_website}}" placeholder="Website" id="website" name="website"
