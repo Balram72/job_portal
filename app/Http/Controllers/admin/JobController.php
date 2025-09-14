@@ -78,9 +78,7 @@ class JobController extends Controller
     public function destroy(Request $req)
     {
         $job = Job::findOrFail($req->id);
-
         if ($job) {
-
             $job->delete();
             session()->flash('success', 'Job deleted successfully.');
             return response()->json([
