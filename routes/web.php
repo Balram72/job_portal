@@ -33,6 +33,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'checkRole'], function () {
   Route::delete('/jobs', [JobController::class, 'destroy'])->name('admin.jobs.destroy');
 
   Route::get('/job-applications', [JobApplicationController::class, 'index'])->name('admin.jobApplications');
+  Route::delete('/job-applications', [JobApplicationController::class, 'destroy'])->name('admin.jobApplications.destroy');
 });
 
 Route::group(['prefix' => 'account'], function () {
