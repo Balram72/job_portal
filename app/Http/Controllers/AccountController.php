@@ -14,6 +14,10 @@ use Illuminate\Support\Facades\Hash;
 use Intervention\Image\ImageManager;
 use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Drivers\Gd\Driver;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ResetPasswordEmail;
+use Illuminate\Support\Facades\DB;
 
 class AccountController extends Controller
 {
@@ -372,5 +376,82 @@ class AccountController extends Controller
         return response()->json([
             'status' => true,
         ]);
+    }
+
+    public function forgotPassword()
+    {
+        return view('front.account.forgot-password');
+    }
+
+    public function processForgotPassword(Request $req)
+    {
+        $validator = Validator::make($req->all(), [
+            'email' => 'required|email|exists:users,email',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('account.forgotPassword')
+                ->withErrors($validator)
+                ->withInput($req->only('email'));
+        }
+
+        $token = Str::random(60);
+        DB::table('password_reset_tokens')->where('email', $req->email)->delete();
+
+        DB::table('password_reset_tokens')->insert([
+            'email' => $req->email,
+            'token' => $token,
+            'created_at' => now()
+        ]);
+
+        // Send Email Here
+        $user = User::where('email', $req->email)->first();
+        $mailData = [
+            'token' => $token,
+            'user' => $user,
+            'subject' => 'You have requested to Change your password'
+        ];
+
+        Mail::to($req->email)->send(new ResetPasswordEmail($mailData));
+
+        return redirect()->route('account.forgotPassword')
+            ->with('success', 'Reset Password Email has been sent to your Inbox/Spam box');
+    }
+
+    public function resetPassword($tokenString)
+    {
+        $token =  DB::table('password_reset_tokens')->where('token', $tokenString)->first();
+        if ($token === null) {
+            return redirect()->route('account.forgotPassword')
+                ->with('error', 'Either Token is invalid');
+        }
+
+        return view('front.account.reset-password', compact('tokenString'));
+    }
+
+    public function processResetPassword(Request $req)
+    {
+        $token =  DB::table('password_reset_tokens')->where('token', $req->token)->first();
+        if ($token === null) {
+            return redirect()->route('account.forgotPassword')
+                ->with('error', 'Either Token is invalid');
+        }
+
+        $validator = Validator::make($req->all(), [
+            'new_password' => 'required|min:5',
+            'confirm_password' => 'required|same:new_password'
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('account.resetPassword', $req->token)
+                ->withErrors($validator);
+        }
+
+        User::where('email', $token->email)->update([
+            'password' => Hash::make($req->new_password)
+        ]);
+
+        return redirect()->route('account.login')
+            ->with('success', 'Password has been changed successfully. You can login now with new password');
     }
 }

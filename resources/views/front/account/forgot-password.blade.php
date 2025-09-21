@@ -7,8 +7,8 @@
         <div class="row d-flex justify-content-center">
             <div class="col-md-5">
                 <div class="card shadow border-0 p-5">
-                    <h1 class="h3">Login</h1>
-                    <form action="{{ route('account.authenticate') }}" method="post">
+                    <h1 class="h3">Forgot Password</h1>
+                    <form action="{{ route('account.processForgotPassword') }}" method="post">
                         @csrf
                         <div class="mb-3">
                             <label for="" class="mb-2">Email*</label>
@@ -17,21 +17,13 @@
                                <span class="invalid-feedback">{{ $message }}</span>
                             @enderror
                         </div> 
-                        <div class="mb-3">
-                            <label for="" class="mb-2">Password*</label>
-                            <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" placeholder="Enter Password">
-                            @error('password')
-                               <span class="invalid-feedback">{{ $message }}</span>
-                            @enderror
-                        </div> 
-                        <div class="justify-content-between d-flex">
-                        <button class="btn btn-primary mt-2" type="submit">Login</button>
-                            <a href="{{ route('account.forgotPassword') }}" class="mt-3">Forgot Password?</a>
-                        </div>
+                        <div class="justify-content-center d-flex">
+                        <button class="btn btn-primary mt-2" type="submit">Submit</button>
+                         </div>
                     </form>                    
                 </div>
                 <div class="mt-4 text-center">
-                    <p>Do not have an account? <a  href="{{ route('account.registration') }}">Register</a></p>
+                    <p>Do not have an account? <a  href="{{ route('account.login') }}">Back to Login</a></p>
                 </div>
             </div>
         </div>
